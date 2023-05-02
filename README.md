@@ -1,10 +1,10 @@
-# Methods of aerospace images segmentation
+# Methods of Aerospace Images Segmentation
 
 This work considers examples of classical methods of computer vision for image segmentation. Segmentation of aerial images is performed on two classical approaches: 
 1) Texture Features ⛓,
 2) Vegetation Index 🌳.
 
-## ⛓ Segmentation of aerospace images by texture features
+## ⛓ Segmentation of Aerospace Images by Texture Features
 
 ### Formal description of the method
 
@@ -143,4 +143,150 @@ Finally, the program was tested on an aerial image. As an example, a satellite i
 
 The output of the program was a segmented image in which white color corresponds to water space, gray to the urban area and black to the rainforest.
 
-## 🌳 Segmentation of aerospace images by vegetation index
+## 🌳 Segmentation of Aerospace Images by Vegetation Index
+
+### General information about vegetation indices
+
+Vegetation index (VI) is an indicator calculated as a result of operations with different spectral bands (channels), and relating to vegetation parameters in a given pixel of the image. Vegetation indices are mostly derived empirically and their efficiency is determined by reflection features.
+
+The main assumption on using VI is that some mathematical operations with different channels can give useful information on vegetation. The second assumption is the idea that the exposed soil in the image will form a straight line in spectral space, the so-called soil line. Almost all common vegetation indices use only the red to near-infrared channel ratio, assuming that the open soil line lies in the near-infrared region. The implication is that this line means zero vegetation.
+
+For all their diversity, most vegetation indices work very poorly for areas with sparse vegetation cover. If the vegetation cover is sparse, the spectrum of the image depends mainly on the soil.
+
+After analyzing the advantages and disadvantages of each of the considered vegetation indices (RVI, NDVI, PVI, SAVI), the normalized difference VI (NDVI) was chosen. Such choice was justified by simplicity of calculation, the widest dynamic range of the considered indexes, the best sensitivity to vegetation changes and widespread use of this vegetation index. Thus, NDVI index will be considered in more detail further with its practical application.
+
+### NDVI
+
+Normalized Difference Vegetation Index (NDVI) is a simple quantitative measure of the amount of photosynthetically active biomass. Calculated using the following formula:
+
+$$NDVI = \dfrac{NIR - RED}{NIR + RED},$$
+
+where $NIR$ - reflection in the near-infrared region of the spectrum, $RED$ - reflection in the red region of the spectrum.
+
+Calculation of NDVI is based on the two most stable parts of the spectral reflection curve of vascular plants. The maximum absorption of solar radiation by chlorophyll of higher vascular plants lies in the red region of the spectrum (0.6-0.7 µm), and the region of maximum reflection of leaf cell structures is located in the infrared region (0.7-1.0 µm). That is, high photosynthetic activity leads to less reflection in the red region of the spectrum and more in the infrared. The ratio of these indicators to each other allows to clearly separate and analyze vegetation from other natural objects. Using not a simple ratio, but a normalized difference between the minimum and maximum reflections increases the measurement accuracy, allows to reduce the influence of such phenomena as differences in image illumination, cloudiness, haze, absorption of radiation by the atmosphere, etc.
+
+Another advantage of NDVI is that it can be calculated from any high, middle or low resolution images having spectral bands in red (0.55-0.75 μm) and infrared (0.75-1.0 μm) bands. Due to the reflection feature in the NIR-RED regions of the spectrum, natural objects not associated with vegetation have a fixed NDVI value, which allows using this parameter for their identification.
+
+Reflection values in the RED and NIR regions and the corresponding NDVI for different objects:
+
+<table>
+<thead>
+  <tr>
+    <th>Object type</th>
+    <th>Reflectance in the red range of the spectrum (RED)</th>
+    <th>Infrared (NIR) reflectance</th>
+    <th>NDVI value</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>Dense vegetation</td>
+    <td>0.100</td>
+    <td>0.500</td>
+    <td>0.700</td>
+  </tr>
+  <tr>
+    <td>Loose vegetation</td>
+    <td>0.100</td>
+    <td>0.300</td>
+    <td>0.500</td>
+  </tr>
+  <tr>
+    <td>Open ground</td>
+    <td>0.250</td>
+    <td>0.300</td>
+    <td>0.025</td>
+  </tr>
+  <tr>
+    <td>Clouds</td>
+    <td>0.250</td>
+    <td>0.250</td>
+    <td>0.000</td>
+  </tr>
+  <tr>
+    <td>Snow and ice</td>
+    <td>0.375</td>
+    <td>0.350</td>
+    <td>-0.050</td>
+  </tr>
+  <tr>
+    <td>Water</td>
+    <td>0.020</td>
+    <td>0.010</td>
+    <td>-0.250</td>
+  </tr>
+  <tr>
+    <td>Artificial materials (concrete, asphalt)</td>
+    <td>0.300</td>
+    <td>0.100</td>
+    <td>-0.500</td>
+  </tr>
+</tbody>
+</table>
+
+Thus, due to the minimum temporal resolution of the data, the calculation of NDVI on their basis can provide operational information on the environmental and climatic situation and the ability to track the dynamics of various parameters with a periodicity of up to 1 week. And large spatial coverage allows monitoring of territories commensurate with the areas of regions and entire countries. 
+
+However, it is necessary to take into account the main disadvantages of NDVI-index use:
+- Inability to use data that has not undergone radiometric correction (calibration);
+- Uncertainties introduced by weather conditions, heavy cloud cover and haze;
+- Necessity for most tasks to compare the obtained results with previously collected data of test sites (standards);
+- The ability to use only the time of the growing season survey for the region in question. Due to its binding to the amount of photosynthetic biomass, NDVI is not effective on images taken during the season of weakened or non-vegetative vegetation in this period.
+
+### Practice
+
+First of all, multispectral space images were selected for segmentation. The images were selected in accordance with a number of requirements due to the peculiarities of NDVI applications. The two most priority requirements among them are: 
+- The vegetation in the images must not be extremely poor;
+- The images must be taken in clear weather in order to minimize the error introduced by weather conditions.
+
+Thus, in view of the above requirements two multispectral satellite images of the same territory were chosen for 2001 and 2003. Such a choice has been made in expectation of the following analysis of changes in vegetation cover of the area, which will make it possible to check the program efficiency. The given images are presented in the form of images of separate channels (RED, GREEN, BLUE, NIR).
+
+Multispectral space image from 2001:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/33491221/235695650-e132da7e-3d10-459d-b947-6ae9f3ca9ed4.png"/>
+</p>
+
+Multispectral space image from 2003:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/33491221/235695679-55117ec7-6f2f-4528-95de-f0667907c6d0.png"/>
+</p>
+
+In order to make it easier to perceive the selected images, RGB images were synthesized from the corresponding channels.
+
+Synthesized RGB image from 2001:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/33491221/235696375-6498880e-a6e2-4171-bf17-b65720581a8a.png"/>
+</p>
+
+Synthesized RGB image from 2003:
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/33491221/235696669-6aca1801-2bce-4b04-a48d-3acafaf0ca87.png"/>
+</p>
+
+
+After analyzing RGB images, it was decided to distinguish 4 types of surface in the segmentation: vegetation, soil, water and artificial objects. 
+
+Based on the data in the table above, the boundaries that NDVI takes for the surfaces under study were selected empirically. Based on the selected boundaries (intervals), the final vegetation index segmentation algorithm was implemented. The developed algorithm was tested on selected multispectral space images. As a result of the program's work, it was expected to see the investigated surfaces colored in the corresponding colors.
+
+Segmented image for 2001:
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/33491221/235698242-72737701-6dfd-4341-bccc-870dc29e6f87.png"/>
+</p>
+
+Segmented image for 2003:
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/33491221/235698395-40cbf687-0513-4b9f-a01c-7a1ccc36f570.png"/>
+</p>
+
+The output of the program was images of the terrain for 2001 and 2003, on which: 
+1) white to water bodies;
+2) light gray - man-made structures;
+3) dark gray - soils;
+4) black - vegetation.
+
+As a result, it is possible to estimate the change in vegetation cover over time by image segmentation. In addition, it is revealed that artificial objects can be mistaken for aquatic objects, because these types of surfaces are very close in NDVI values.
+
+
+
