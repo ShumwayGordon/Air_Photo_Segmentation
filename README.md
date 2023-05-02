@@ -75,7 +75,7 @@ Auxiliary statistical characteristics of the scattering matrix:
 </table>
 </div>
 
-The characteristics used as a feature description:
+The characteristics used as a descriptive feature:
 
 <div align="center">
   <table>
@@ -129,5 +129,18 @@ Comparison of feature vectors for each pixel with the feature vectors of the ref
 
 For testing and demonstrating the algorithm, four regular textures were selected: flowers, grass, metal and wood. As a result, the program was expected to display four large segments, each of which was marked with the appropriate flag (specific color).
 
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/33491221/235681168-4f8de50f-cf3b-4b8d-a324-6484f9029d56.png"/>
+</p>
+
+In the figure above, you can see that the algorithm resulted in an image divided into 4 different segments, in which each flag corresponds to a particular texture. Small inconsistencies in the texture intersections are caused by the close proximity of the textures and depend on the size of the local scanning window.
+
+Finally, the program was tested on an aerial image. As an example, a satellite image of the Itaipu Dam in Brazil was taken in which the following textures were selected for segmentation: tropical forest, urban area and a nearby body of water. The final result of the program can be seen in the figure below.
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/33491221/235682510-6d2bef83-f174-4c7f-a16e-4a5080eb56c6.png"/>
+</p>
+
+The output of the program was a segmented image in which white color corresponds to water space, gray to the urban area and black to the rainforest.
 
 ## 🌳 Segmentation of aerospace images by vegetation index
